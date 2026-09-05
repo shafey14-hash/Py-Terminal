@@ -2,5 +2,5 @@
 // Set this to your deployed backend URL. Loaded before app.js so
 // store.js can read it as the default apiBaseUrl setting.
 window.PYTERMINAL_CONFIG = {
-  apiBaseUrl: "http://localhost:4000/api",
+  apiBaseUrl: "https://py-terminal-ide.vercel.app/api",
 };
