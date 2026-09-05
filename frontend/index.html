@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>PyTerminal - Online Python IDE</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- ===================== TOP BAR ===================== -->
+      <header id="top-bar">
+        <div class="top-bar-left">
+          <button
+            id="btn-toggle-explorer"
+            class="icon-btn mobile-only"
+            title="Files"
+          >
+            &#9776;
+          </button>
+          <span id="app-logo">Py<span class="accent">Terminal</span></span>
+          <span
+            id="project-name-label"
+            class="project-name"
+            title="Click to rename"
+            >my-project</span
+          >
+        </div>
+
+        <div class="top-bar-center">
+          <select id="entry-file-select" title="Run File"></select>
+          <button
+            id="btn-run"
+            class="btn btn-primary"
+            title="Run (Ctrl/Cmd+Enter)"
+          >
+            &#9658; Run
+          </button>
+          <button id="btn-stop" class="btn btn-danger" title="Stop" disabled>
+            &#9632; Stop
+          </button>
+          <span id="execution-badge" class="exec-badge exec-ready"
+            >&#9679; Ready</span
+          >
+        </div>
+
+        <div class="top-bar-right">
+          <button id="btn-ai" class="btn" title="AI Assistant">
+            &#10024; AI
+          </button>
+          <button id="btn-settings" class="icon-btn" title="Settings">
+            &#9881;
+          </button>
+        </div>
+      </header>
+
+      <!-- ===================== MAIN AREA ===================== -->
+      <div id="main-area">
+        <div id="mobile-overlay"></div>
+
+        <!-- LEFT: File Explorer -->
+        <aside id="file-explorer">
+          <div class="explorer-header">
+            <span>EXPLORER</span>
+            <div class="explorer-actions">
+              <button id="btn-new-file" class="icon-btn small" title="New File">
+                &#128196;+
+              </button>
+              <button
+                id="btn-new-folder"
+                class="icon-btn small"
+                title="New Folder"
+              >
+                &#128193;+
+              </button>
+            </div>
+          </div>
+
+          <div class="explorer-project-actions">
+            <button id="btn-new-project" class="text-btn">New Project</button>
+            <button id="btn-open-folder" class="text-btn">Open Folder</button>
+            <button id="btn-open-upload" class="text-btn">Upload Files</button>
+            <button id="btn-open-zip" class="text-btn">Open ZIP</button>
+            <button id="btn-save" class="text-btn">Save</button>
+            <button id="btn-download-zip" class="text-btn">Download ZIP</button>
+          </div>
+
+          <div id="file-tree"></div>
+
+          <input
+            type="file"
+            id="upload-input"
+            multiple
+            webkitdirectory
+            directory
+            hidden
+          />
+          <input type="file" id="zip-input" accept=".zip" hidden />
+        </aside>
+
+        <!-- CENTER: Editor -->
+        <section id="editor-area">
+          <div id="tab-strip"></div>
+          <div id="monaco-container"></div>
+        </section>
+      </div>
+
+      <!-- BOTTOM: Terminal / Output -->
+      <div id="bottom-panel">
+        <div id="panel-resizer"></div>
+        <div class="output-header">
+          <div id="bottom-panel-handle" class="mobile-only drag-handle"></div>
+          <div class="output-tabs">
+            <button class="output-tab active" data-view="terminal">
+              Terminal
+            </button>
+            <button class="output-tab" data-view="problems">Problems</button>
+          </div>
+          <div class="output-header-right">
+            <span id="status-flash" class="status-flash"></span>
+          </div>
+        </div>
+        <div class="output-body">
+          <div id="output-view-terminal" class="output-view active">
+            <pre id="output-content"></pre>
+          </div>
+          <div id="output-view-problems" class="output-view">
+            <p class="hint-text">
+              Problems from the most recent run's stderr will appear here in a
+              future pass. For now, check the Terminal tab.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== AI PANEL ===================== -->
+      <aside id="ai-panel" class="side-panel">
+        <div class="side-panel-header">
+          <span>&#10024; AI Assistant</span>
+          <button id="ai-close" class="icon-btn small">&#10005;</button>
+        </div>
+        <div id="ai-status" class="ai-status"></div>
+        <div class="ai-actions">
+          <button id="ai-explain-code" class="text-btn">Explain Code</button>
+          <button id="ai-explain-error" class="text-btn">Explain Error</button>
+          <button id="ai-fix-error" class="text-btn">Fix Error</button>
+          <button id="ai-suggest" class="text-btn">Suggest Improvement</button>
+          <button id="ai-explain-selection" class="text-btn">
+            Explain Selection
+          </button>
+        </div>
+        <div class="ai-generate">
+          <textarea
+            id="ai-generate-input"
+            placeholder="Describe code to generate, e.g. 'a function that reverses a string'"
+          ></textarea>
+          <button id="ai-generate-btn" class="btn btn-primary small">
+            Generate Code
+          </button>
+        </div>
+        <div class="ai-result-wrap">
+          <pre id="ai-result" class="ai-result">Choose an action above.</pre>
+          <div class="ai-result-actions">
+            <button id="ai-insert-btn" class="text-btn" disabled>
+              Insert at Cursor
+            </button>
+            <button id="ai-copy-btn" class="text-btn">Copy</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ===================== SETTINGS PANEL ===================== -->
+      <aside id="settings-panel" class="side-panel">
+        <div class="side-panel-header">
+          <span>&#9881; Settings</span>
+          <button id="settings-close" class="icon-btn small">&#10005;</button>
+        </div>
+
+        <div class="setting-row">
+          <label for="setting-theme">Theme</label>
+          <select id="setting-theme">
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <label for="setting-font-size"
+            >Editor font size (<span id="setting-font-size-value">14</span
+            >px)</label
+          >
+          <input
+            type="range"
+            id="setting-font-size"
+            min="10"
+            max="24"
+            step="1"
+          />
+        </div>
+
+        <div class="setting-row">
+          <label for="setting-tab-size">Tab size</label>
+          <select id="setting-tab-size">
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <label for="setting-word-wrap">Word wrap</label>
+          <select id="setting-word-wrap">
+            <option value="off">Off</option>
+            <option value="on">On</option>
+          </select>
+        </div>
+
+        <div class="setting-row checkbox-row">
+          <label for="setting-error-sound">Error sound</label>
+          <input type="checkbox" id="setting-error-sound" />
+        </div>
+
+        <div class="setting-row">
+          <label for="setting-output-mode">Output mode</label>
+          <select id="setting-output-mode">
+            <option value="terminal">Terminal</option>
+            <option value="final">Final Output</option>
+            <option value="simulated">Simulated Live Output</option>
+          </select>
+        </div>
+
+        <div class="setting-row checkbox-row">
+          <label for="setting-autosave">Auto-save to browser</label>
+          <input type="checkbox" id="setting-autosave" />
+        </div>
+
+        <div id="settings-api-status" class="status-line"></div>
+        <p class="hint-text">
+          Package availability, execution limits, and provider details are
+          documented in the project README.
+        </p>
+      </aside>
+    </div>
+
+    <!-- Monaco AMD loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.47.0/min/vs/loader.min.js"></script>
+    <!-- JSZip for ZIP export/import -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script src="js/config.js"></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

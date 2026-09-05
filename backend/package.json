@@ -1,0 +1,21 @@
+{
+  "name": "pyterminal-backend",
+  "version": "1.0.0",
+  "description": "PyTerminal backend API - orchestrates sandboxed Python execution and optional Gemini AI assistance. Runs no user code itself.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

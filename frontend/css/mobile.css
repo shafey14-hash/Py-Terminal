@@ -1,0 +1,163 @@
+/**
+ * Mobile layout: file explorer becomes a slide-in drawer, the bottom panel
+ * becomes a collapsible bottom sheet, and the top bar condenses.
+ */
+
+@media (max-width: 900px) {
+  :root {
+    --topbar-height: 52px;
+    --bottom-panel-height: 44px; /* collapsed height; expands via .expanded */
+  }
+
+  .mobile-only {
+    display: inline-flex;
+  }
+
+  #top-bar {
+    padding: 0 8px;
+    gap: 6px;
+  }
+  .project-name {
+    display: none;
+  }
+  #app-logo {
+    font-size: 13px;
+  }
+
+  .top-bar-center {
+    flex: 1;
+    justify-content: flex-end;
+    overflow-x: auto;
+  }
+  #entry-file-select {
+    max-width: 90px;
+    font-size: 11px;
+  }
+  .btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  .btn-primary,
+  .btn-danger {
+    min-width: 0;
+  }
+
+  .top-bar-right .btn {
+    padding: 6px 8px;
+  }
+
+  /* File explorer becomes a drawer */
+  #file-explorer {
+    position: fixed;
+    top: var(--topbar-height);
+    bottom: 0;
+    left: 0;
+    width: 78vw;
+    max-width: 300px;
+    z-index: 30;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.5);
+  }
+  #file-explorer.open {
+    transform: translateX(0);
+  }
+
+  #mobile-overlay.show {
+    display: block;
+    position: fixed;
+    inset: var(--topbar-height) 0 0 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 25;
+  }
+
+  .explorer-project-actions {
+    max-height: 90px;
+    overflow-y: auto;
+  }
+
+  #main-area {
+    flex-direction: column;
+  }
+
+  #editor-area {
+    flex: 1;
+    min-height: 0;
+  }
+
+  #tab-strip {
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab {
+    padding: 0 8px 0 10px;
+    font-size: 12px;
+  }
+
+  /* Bottom panel becomes a collapsible bottom sheet */
+  #bottom-panel {
+    transition: height 0.2s ease;
+    overflow: hidden;
+  }
+  #bottom-panel.expanded {
+    height: 50vh;
+  }
+  #panel-resizer {
+    display: none;
+  }
+
+  .output-header {
+    padding: 6px 10px;
+  }
+  .drag-handle {
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    margin-right: 8px;
+  }
+
+  #output-content {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  /* Side panels become full-width sheets on mobile */
+  .side-panel {
+    width: 100%;
+    top: var(--topbar-height);
+  }
+
+  /* Touch targets */
+  .icon-btn,
+  .text-btn,
+  .tab-close,
+  .output-tab {
+    min-height: 34px;
+  }
+  .tree-row {
+    min-height: 38px;
+  }
+  .tree-actions {
+    display: flex !important;
+  }
+
+  /* Avoid horizontal scroll on the whole app */
+  html,
+  body,
+  #app {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  .explorer-project-actions {
+    flex-direction: column;
+  }
+  .text-btn {
+    width: 100%;
+    text-align: left;
+  }
+  #entry-file-select {
+    max-width: 70px;
+  }
+}
